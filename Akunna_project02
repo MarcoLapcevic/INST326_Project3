@@ -1,0 +1,118 @@
+# imports
+import tkinter as tk
+from tkinter import ttk
+import datetime # one module for working with dates and times
+
+# The MainWindow class creates a custom GUI window based on the tkinter window (tk.Tk)
+# It has an __init__() method, and three additional methods (new_note(), open_notebook(), and save_notebook())
+# These methods correspond to new, open, and save buttons in the window.
+# The new_note method calls the NoteForm class to create a new note form top level window.
+
+class MainWindow(tk.Tk):
+    def __init__(self):  #initialize the main window
+        super().__init__() # initialize it as a tkinter window
+        
+        self.geometry("600x400") # set the default window size
+        self.title('Notebook') #set the default window title
+        self.notebook = [] # initialize an attribute named 'notebook' as an empty list
+        self.notes = []        
+
+        # add additionallines to the __init__() function
+        self.new_note_btn = tk.Button(self, text="New Note", command=self.new_note)
+        self.new_note_btn.pack()
+        
+        self.open_notebook_btn = tk.Button(self, text="Open Notebook", command=self.open_notebook)
+        self.open_notebook_btn.pack()
+        
+        self.save_notebook_btn = tk.Button(self, text="Save Notebook", command=self.save_notebook)
+        self.save_notebook_btn.pack()
+        
+        
+    def new_note(self):
+        note_window = NoteForm(self, self.notebook, self.notes)
+        return None
+
+    def open_notebook(self):
+        print('open notebook') # replace with the code you need to open the notebook and display the notes
+        return None
+
+    def save_notebook(self):
+        print('save notebook') # replace with the code needed to save the notebook
+        return None
+
+
+# the NoteForm() class creates a Toplevel window that is a note form containing fields for
+# data entry for title, text, link, and tags. It also calculates a meta field with date, time, and timezone
+# the Noteform class has an __init__() method, and a submit() method that is called by a submit button
+# the class may contain additional methods to perform tasks like calculating the metadata, for example
+# the submit method calls the MakeNote class that transforms the the entered data into a new note object.
+
+class NoteForm(tk.Toplevel):
+    
+    def __init__(self, master, notebook, notes): # initialize the new object
+        super().__init__(master) # initialize it as a toplevel window
+        self.notebook = notebook
+        self.notes = notes
+        
+        lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet suscipit mi, non porttitor mauris.'
+        
+        # add additional lines to set the new window's attributes and default parameters
+        self.title_label = tk.Label(self, bg='light gray', text='Note Title:')
+        self.title_label.grid(padx=10, pady=10, row=1, column=0, sticky='e')
+    
+        self.text_label = tk.Label(self, bg='light gray', text='Note Text:')
+        self.text_label.grid(padx=10, pady=10, row=2, column=0, sticky='e')
+        
+        self.note_title = tk.Entry(self, width=80)
+        self.note_title.grid(paadx=10, pady=10, row=1, column=1, sticky='w')
+        self.note_title.insert(0, 'New note title')
+        
+        self.note_text = tk.Text(self, height=10, width=60)
+        self.note_text.grid(padx=10, pady=10, row=2, column=1)
+        self.note_text.insert('1.0', lorem)
+                             
+        self.submit_bin = tk.Button(self, text="Submit Note", command=self.submit)
+        self.submit_bin.grid(padx=10, pady=10, row=3, column=1)
+        
+
+        
+    def submit(self):
+        # add lines to the submit method
+        now = datetime.datetime.now()
+        local_now = now.astimezone()
+        local_tz = local_now.tzinfo
+        
+        created = datetime.datetime()
+        title = self.note_title.get()
+        metadata = f'created {created}, {local_tz}'
+        note_dict = {'title':title, 'text':text, 'metadata':metadata}
+        
+        print(title)
+        print(text)
+        print(metadata)
+        
+        new_note = MakeNote(note_dict)
+        self.notes.append(new_note)
+        print(self.notes)
+        return None
+
+    
+# The MakeNote class takes a dictionary containing the data entered into the form window,
+# and transforms it into a new note object.
+# At present the note objects have attributes but no methods.
+
+class MakeNote():
+    def __init__(self, note_dict):
+        # add lines to the init method
+        self.title = note_dict.get()
+        pass # delete this line when you have entered actual code
+
+
+
+# main execution
+
+if __name__ == '__main__':
+    
+    main_window = MainWindow() # this creates a notebook / main window called main_window. You may change the name if you want
+
+    main_window.mainloop()
